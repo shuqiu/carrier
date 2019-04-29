@@ -1,0 +1,91 @@
+defaultHttpHeaders:
+  userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36
+  accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
+
+requests:
+  -
+   name: get-login-page
+   url: https://ah.ac.10086.cn/login
+   method: GET
+   headers:
+      Content-Type: application/x-www-form-urlencoded
+      Referer: https://ah.ac.10086.cn/
+
+  # 这个url需要替换
+  -
+    name: get-spid
+    url: https://ah.ac.10086.cn/login
+    method: GET
+    headers:
+      Referer: https://ah.ac.10086.cn/login
+
+  -
+    name: first-login
+    url: https://ah.ac.10086.cn/Login
+    method: POST
+    postBody: type=B&formertype=B&backurl=http://service.ah.10086.cn/LoginSso&backurlflag=https://ah.ac.10086.cn/4login/backPage.jsp&errorurl=https://ah.ac.10086.cn/4login/errorPage.jsp&spid=${spid}&mobileNum=${phone}&login_pwd_type=2&loginType=0&validCode=${code}&servicePassword=${enpassword}&servicePassword_1=${password}&validCode_state=True
+    verifyCodeUrl:
+      name: load-img-code
+      url: https://ah.ac.10086.cn/common/image.jsp
+      method: GET
+      goal: FOR_IMG_BASE64
+    expects:
+      -
+        type: contains
+        content: "location.replace"
+    errors:
+      -
+        type: contains
+        content: 图形验证码
+        note: 图形验证码输入错误
+      -
+        type: contains
+        content: 账户名与密码不匹配
+        note: 用户名或密码错误
+
+  # 这个url需要替换
+  -
+   name: get-SAMLart
+   url: https://ah.ac.10086.cn/login
+   method: GET
+   headers:
+     Host: login.10086.cn
+
+  -
+    name: end-login
+    url: http://service.ah.10086.cn/LoginSso
+    method: POST
+    postBody: SAMLart=${SAMLart}&RelayState=
+
+  -
+    name: get_yzmid
+    url: http://service.ah.10086.cn/busi/broadbandZQ/getSubmitId?type=billDetailIndex_submitId&_=${timestamp}
+    method: GET
+
+  # 查询通话记录身份验证
+  -
+    name: auth-sms
+    url: http://service.ah.10086.cn/pub/chkSmPass?smPass=${code}&phone_No=
+    method: GET
+    verifyCodeUrl:
+      name: sendPhoneCode
+      url: http://service.ah.10086.cn/pub/sendSmPass?opCode=EC20&phone_No=&type=billDetailIndex_submitId&yanzm_submitId=${yzmid}
+      method: GET
+      goal: FOR_SMS
+    expects:
+      -
+        type: contains
+        content: "\"retCode\":\"000000\""
+    errors:
+      -
+       type: contains
+       content: 验证码输入错误
+       note: 短信验证码输入错误
+      -
+       type: contains
+       content: 参数非数字，请重新输入
+       note: 短信验证码输入错误
+      -
+       type: contains
+       content: 随机密码错误
+       note: 短信验证码输入错误

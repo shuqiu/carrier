@@ -1,0 +1,56 @@
+defaultHttpHeaders:
+  userAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36
+  accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
+  charset: utf-8
+
+
+requests:
+  -
+   name: call-record
+   url: http://service.ah.10086.cn/qry/qryBillDetailPage?detailType=201&startDate=${loop@ymint}&endDate=${endDate}&nowPage=1&qryType=
+   method: GET
+
+  -
+   name: bill-info
+   url: http://service.ah.10086.cn/qry/qryMonthBillIndex?beginDate=${loop@ym}&_=${timestamp}
+   method: GET
+
+  -
+   name: pay-record
+   url: http://service.ah.10086.cn/qry/qryPayHisInfo?beginDate=${loop@ymint}&endDate=${endDate}
+   method: GET
+
+  -
+   name: person-info
+   url: http://service.ah.10086.cn/userInfo/qryUserinfo?_=${timestamp}
+   method: GET
+
+  -
+   name: get_taocan
+   url: http://service.ah.10086.cn/qry/qryTaocanxx?_=${timestamp}
+   method: GET
+
+  -
+   name: real-fee
+   url: http://service.ah.10086.cn/qry/qryMonthBillIndex?beginDate=&_=${timestamp}
+   method: GET
+
+expression:
+  loops:
+    -
+     id: ymint
+     resultType: int
+     step: 1
+     loopTimes: 6
+     initValue: 0
+     format: none
+     unit: 1
+
+    -
+     id: ym
+     resultType: date
+     step: 1
+     loopTimes: 6
+     initValue: now
+     format: yyyyMM
+     unit: m
