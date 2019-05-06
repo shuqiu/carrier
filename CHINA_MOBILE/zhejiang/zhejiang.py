@@ -38,9 +38,9 @@ def login():
     # ctx = execjs.compile(js)
 
     # 登录手机号
-    moblile = '17816869310'
+    moblile = 'xxxxxx'
     # 登录密码
-    password = '341930'
+    password = 'xxxxx'
     # 记录cookie
     cookies = dict()
 
@@ -58,7 +58,6 @@ def login():
     with open('captcha.jpg', 'wb') as f:
         f.write(resp.content)
     cookies.update(resp.cookies.get_dict())
-    # print('11111111',resp.cookies.get_dict())
 
     # 3 输入验证码,错误的话返回
     captcha_code = input('please input captcha....')
@@ -68,7 +67,6 @@ def login():
     if resp.text.find('1') == -1:
         print('error captcha input - -')
         return False
-    # print('11111111',resp.cookies.get_dict())
 
     # 4 登录一
     url = 'https://zj.ac.10086.cn/Login'
@@ -84,8 +82,6 @@ def login():
     # 此两个参数用于登录二
     SAMLart = re.search(r'name="SAMLart" value="(.+?)"', resp.text).group(1)
     displayPics = re.search(r'name="displayPics" value="(.+?)"', resp.text).group(1)
-    # print('222222222',resp.cookies.get_dict())
-    # print(resp.text)
 
     # 5 登录二
     url = 'https://zj.ac.10086.cn/login/backPage.jsp'
@@ -99,8 +95,6 @@ def login():
     }
     resp = requests.post(url, headers=login_headers, data=data, cookies=cookies)
     cookies.update(resp.cookies.get_dict())
-    # print('3333333333',resp.cookies.get_dict())
-    # print(resp.text)
 
     # 6 登录三,登录重定向到登录成功的页面
     # 更新 headers
@@ -114,8 +108,6 @@ def login():
     cookies.update(resp.cookies.get_dict())
     # 登录成功后的重定向地址
     Location = resp.headers.get('Location')
-    # print('44444444',resp.cookies.get_dict())
-    # print(resp.text)
 
     # 7 登录成功返回cookie
     # 登录成功时,状态码为302，重定向的Location为 http://www.zj.10086.cn/my/index.do
@@ -262,10 +254,6 @@ def parse(res):
 def main():
     cookies = login()
     res = crawl(cookies)
-
-
-# print(cookies)
-
 
 if __name__ == '__main__':
     main()
