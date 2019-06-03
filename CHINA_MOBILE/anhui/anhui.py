@@ -13,7 +13,6 @@ from dateutil.relativedelta import relativedelta
 from dateutil.rrule import MONTHLY, rrule
 
 cookies = dict()
-# cookies ={'AHSSOSESSIONID': 'sso1_10!!rSAtq4S90u9mvJY45_6NjF5jHi5GQkrTuBKNo3HM6ELOdzELK3K1!330759458', 'AHSSOSESSIONID_RAS': 'sso1_RAS_02', 'SSO_APP_SESSIONID': 'rSAtq4S90u9mvJY45_6NjF5jHi5GQkrTuBKNo3HM6ELOdzELK3K1!330759458', 'SSO_SID': '4c0b53393bf94d7295eb8e9f632e7109', 'CmWebtokenid': '18855130130,ah', 'SSO_NEW_SESSIONID': 'rSAtq4S90u9mvJY45_6NjF5jHi5GQkrTuBKNo3HM6ELOdzELK3K1!330759458', 'U_C_VS': '71C4D25A825DAB9C3C08A7D3975CFA8BD85926B9264034EE790CA94592388E07', 'cmtokenid': '4c0b53393bf94d7295eb8e9f632e7109@.10086.cn', 'sendRom': '1551249426658', 'ArrayWT': 'qdjtfw02_04', 'FSSBBIl1UgzbN7N41000S': 'LZGHiGlzkeLVEOS4P2fzP40ziFXKxVGw3mVslD0MYyIjHdGa_baJWr61OuJtpkcI', 'FSSBBIl1UgzbN7N41000T': '1u_GHVNV4oJMMypmORKL8ZqYjjAfECF8cpwBW92LSIKDdLB4B2h1npm2auV1hTHmw_lgGbbTzwfdhxx7hzt8nj2LcqWiOL5ZmjmGt0jG4ZIb_BvXCf23Yb9gqDx.pnR.8Fbvg667u1WLP_pmQ0KqFJLIW8fT2EkgU8eLOyXDLdtLFYG', 'jsession_id_4_miso': '52ED361E9D604ED4755F32600C210241', 'qdjtfw02_RAS_g': 'qdjtfw02_RAS_01'}
 basicinfo = {}
 
 
@@ -103,24 +102,26 @@ def login():
     resp = requests.get(url=firtst_login, headers=headers, verify=False)
     cookies.update(resp.cookies.get_dict())
 
-    print(cookies)
-
-    # 获取跳转链接，进行请求，并获取spid
-    url = re.findall(r'replace\(\'(.*)\'\);', resp.text)[0]
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-        "Referer": "https://ah.ac.10086.cn/login"
-    }
-    resp = requests.get(url=url, headers=headers, verify=False, cookies=cookies)
-    cookies.update(resp.cookies.get_dict())
-
-
-    print(cookies)
-    # 获取spid
-    et = etree.HTML(resp.text)
-    spid_list = et.xpath("//*[@name='spid']/@value")
-    spid = spid_list[0]
+    # # 获取跳转链接，进行请求，并获取spid
+    # url = re.findall(r'replace\(\'(.*)\'\);', resp.text)[0]
+    # headers = {
+    #     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36",
+    #     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+    #     "Referer": "https://ah.ac.10086.cn/login"
+    # }
+    # resp = requests.get(url=url, headers=headers, verify=False, cookies=cookies)
+    # cookies.update(resp.cookies.get_dict())
+    #
+    # print(resp.text)
+    #
+    #
+    # print(cookies)
+    # # 获取spid
+    # et = etree.HTML(resp.text)
+    # spid_list = et.xpath("//*[@name='spid']/@value")
+    # spid = spid_list[0]
+    #
+    # print(spid)
 
     # # 获取图片验证码
     # captcha_url = "https://ah.ac.10086.cn/common/image.jsp".format(random.random())

@@ -10,14 +10,17 @@ from PIL import Image
 import requests
 from io import BytesIO
 
-# 文档  https://www.jianshu.com/p/c8df1194b514
-# 极验验证码2.0版本
+'''
+文档  https://www.jianshu.com/p/c8df1194b514
+极验验证滑块2.0版本
+'''
+
 
 class HuXiu(object):
     def __init__(self):
         chrome_option = webdriver.ChromeOptions()
         # chrome_option.set_headless()
-
+        chrome_option.add_experimental_option('excludeSwitches', ['enable-automation'])
         self.driver = webdriver.Chrome(chrome_options=chrome_option)
         self.driver.set_window_size(1440, 900)
 
@@ -80,7 +83,8 @@ class HuXiu(object):
         else:
             print("验证成功")
             # 成功后输入手机号，发送验证码
-            self.register()
+            # self.register()
+            self.analog_drag()
 
     # 获取图片和位置列表
     def get_image_url(self, xpath):
@@ -158,15 +162,26 @@ class HuXiu(object):
         ActionChains(self.driver).click_and_hold(element).perform()
         time.sleep(0.5)
         while distance > 0:
-            if distance > 10:
-                # 如果距离大于10，就让他移动快一点
+            if distance > 120:
+                span = 8
+            elif distance > 80:
                 span = random.randint(5, 8)
+            elif distance > 30:
+                span = random.randint(4, 6)
+            elif distance > 10:
+                span = random.randint(3, 5)
             else:
                 # 快到缺口了，就移动慢一点
                 span = random.randint(2, 3)
+
             ActionChains(self.driver).move_by_offset(span, 0).perform()
             distance -= span
-            time.sleep(random.randint(10, 50) / 100)
+            if distance > 100:
+                time.sleep(random.randint(10, 50) / 1000)
+            elif distance > 10:
+                time.sleep(random.randint(10, 50) / 500)
+            else:
+                time.sleep(random.randint(10, 50) / 100)
 
         ActionChains(self.driver).move_by_offset(distance, 1).perform()
         ActionChains(self.driver).release(on_element=element).perform()
