@@ -50,8 +50,8 @@ class QQEmail(object):
         qrsig_resp = requests.get(qrsig_url, headers=headers, verify=False, cookies=self.cookies)
         self.cookies.update(qrsig_resp.cookies)
 
-        username = '284794223'
-        mima = 'bulibuqi3344..'
+        username = 'qq号'
+        mima = 'qq密码'
 
         first_url = "https://ssl.ptlogin2.qq.com/check"
 
@@ -206,5 +206,5 @@ if __name__ == '__main__':
           "css=https://res.mail.qq.com/zh_CN/htmledition/style/ptlogin_input_for_xmail440503.css"
     q = QQEmail()
     q.getParam(url)
-    q.getMailList(0)
+    # q.getMailList(0)
     # q.getProxy()
